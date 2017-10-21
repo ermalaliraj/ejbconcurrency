@@ -3,9 +3,9 @@ _ejbconcurrency_ is a small project for checking how container handles EJB trans
 
 # Project structure
 The project consists in three modules:
-- `ejbconcurrency-server` _EJB_ to be deployed in the _application server_
-- `ejbconcurrency-api` _API_ exposed by the _EJB_ (_Remote_ and _DTOs_ used by the client are located here)
-- `ejb-client` _standalone_ java application for testing the _EJB_
+- `ejbconcurrency-server` _EJB_ to be deployed in the _application server_.
+- `ejbconcurrency-api` _API_ exposed by the _EJB_ (_Remote_ and _DTOs_ used by the client are located here).
+- `ejb-client` _standalone_ java application for testing the _EJB_.
 
 # EJB - Description
 _Dashboard_ is a _stateless_ EJB which adds a *point* in the dashboard. If any other free point present, adds a new *segment* between two points. The same point can not be used in two segments.
@@ -14,7 +14,7 @@ _Dashboard_ is a _stateless_ EJB which adds a *point* in the dashboard. If any o
 
 # EJB - Technical
 `@Stateless
-SegmentRemote.addPointToDashboard("A1")`  => Adds the segment _[A0-A1]_, with the first free point _A0_ found.
+DashboardRemote.addPointToDashboard("A1")`  => Adds the segment _[A0-A1]_, with the first free point _A0_ found.
 Given a new incoming point *A1*:
 - There is any free point *A0* in database? =>  `select * from POINT where rownum=1;`
     - YES
@@ -24,7 +24,7 @@ Given a new incoming point *A1*:
         1. Add *A1* to the temporary table => `insert into table POINT values(A1)`
         2. *A1* will be coupled with the next eventually coming point, *A2*.
 		
-If a client calls `SegmentRemote` and sends a sequence of points, one by one: `A0, A1, A2, A3, A4, A5, A6`. <br/> 
+If a client calls `DashboardRemote` and sends a sequence of points, one by one: `A0, A1, A2, A3, A4, A5, A6`. <br/> 
 At the end of the computation the data in DB will be as follow:
 ```
 Segments: [A0-A1], [A2-A3], [A4-A5]
@@ -32,7 +32,7 @@ Points:   [A6]
 ```
 
 ## Concurrent scenario
-If two clients calling *concurrently* (at the same time) `SegmentRemote` with the following sequences:
+If two clients calling *concurrently* (at the same time) `DashboardRemote` with the following sequences:
 ```
 CLIENT1: A1, A2, A3, A4, A5
 CLIENT2: B1, B2, B3, B4, B5
