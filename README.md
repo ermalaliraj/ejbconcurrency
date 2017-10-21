@@ -8,9 +8,9 @@ The project consists in three modules:
 - `ejb-client` _standalone_ java application for testing the _EJB_
 
 # EJB - Description
-_Segment_ is a _stateless_ EJB which adds a *point* in the dashboard. If any other free point present, adds a new *segment* between two points. The same point can not be used in two segments.
+_Dashboard_ is a _stateless_ EJB which adds a *point* in the dashboard. If any other free point present, adds a new *segment* between two points. The same point can not be used in two segments.
 
-![Segments](./segments2.jpg)
+![Segments](./segments.jpg)
 
 # EJB - Technical
 `@Stateless
