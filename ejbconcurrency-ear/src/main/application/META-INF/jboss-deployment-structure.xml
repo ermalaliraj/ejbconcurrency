@@ -1,0 +1,6 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<jboss-deployment-structure xmlns = "urn:jboss:deployment-structure:1.1">
+
+	<ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+	
+</jboss-deployment-structure>
