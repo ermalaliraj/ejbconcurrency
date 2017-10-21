@@ -21,14 +21,14 @@ import org.apache.commons.logging.LogFactory;
 import com.ea.ejbconcurrency.dto.SegmentDTO;
 import com.ea.ejbconcurrency.exception.BusinessException;
 import com.ea.ejbconcurrency.exception.ServerException;
-import com.ea.ejbconcurrency.remote.SegmentRemote;
+import com.ea.ejbconcurrency.remote.DashboardRemote;
 import com.ea.ejbconcurrency.util.DBUtil;
 
 @Stateless
-@Remote(SegmentRemote.class)
-public class SegmentDS implements SegmentRemote {
+@Remote(DashboardRemote.class)
+public class DashboardDS implements DashboardRemote {
 
-	private static final Log log = LogFactory.getLog(SegmentDS.class);
+	private static final Log log = LogFactory.getLog(DashboardDS.class);
 
 	@Resource(mappedName = "java:jboss/datasources/ExampleDS")
 	private DataSource dataSource;

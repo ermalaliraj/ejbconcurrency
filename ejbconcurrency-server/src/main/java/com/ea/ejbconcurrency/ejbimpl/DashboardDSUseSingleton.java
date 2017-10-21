@@ -14,16 +14,16 @@ import org.apache.commons.logging.LogFactory;
 
 import com.ea.ejbconcurrency.dto.SegmentDTO;
 import com.ea.ejbconcurrency.exception.ServerException;
-import com.ea.ejbconcurrency.remote.SegmentRemote;
+import com.ea.ejbconcurrency.remote.DashboardRemote;
 import com.ea.ejbconcurrency.singleton.DSSegmentSingleton;
 
 @Stateless
-@Remote(SegmentRemote.class)
-public class SegmentDSIsolationLevel implements SegmentRemote {
+@Remote(DashboardRemote.class)
+public class DashboardDSUseSingleton implements DashboardRemote {
 
-	private static final Log log = LogFactory.getLog(SegmentDSIsolationLevel.class);
+	private static final Log log = LogFactory.getLog(DashboardDSUseSingleton.class);
 
-	@EJB(name = "datasourceExample")
+	@EJB(name = "DSSegmentSingleton")
 	private DSSegmentSingleton segmentSingleton;
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

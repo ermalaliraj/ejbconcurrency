@@ -15,7 +15,6 @@ import com.ea.ejbconcurrency.dto.SegmentDTO;
 public class Main {
 
 	private static final Logger log = Logger.getLogger(Main.class);
-	private static final int SLEEP_TIME = 1000 / 1000;
 	private static final int DEFAULT_NR_CLIENTS = 2;
 	private static final int DEFAULT_NR_CALLS_FOR_CLIENT = 10;
 	public static final String IMPLEMENTATION_EM = "SegmentEM";
@@ -30,19 +29,19 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			getValuesFromInput(args);
-			log.info("Calling EJB Segment with implementation \""+beanImplementation+"\". Each client will send to the EJB "+nrCallsForClient+" points");
+			log.info("Calling EJB Segment with implementation \""+beanImplementation+"\". Created "+nrClients+" clients, each of them will send to the EJB "+nrCallsForClient+" points");
+			log.info("We expect at the end of the test: "+(nrCallsForClient*nrClients)/2 + " Segments and "+(nrCallsForClient*nrClients)%2 + " Points");
 			
 			//1. Call EJB to clean data from DB. 
-			SegmentClient cleaner = new SegmentClient("CLEANER", beanImplementation);
+			DashboardClient cleaner = new DashboardClient("CLEANER", beanImplementation, nrCallsForClient);
 			cleaner.resetDashboard();
 			
-			//2. Create two clients in two different threads
+			//2. Create two clients in run them in two different threads
 			ExecutorService executor = Executors.newFixedThreadPool(2);
-			List<String> points1List = createPointsWithPrefix("A");
-			Runnable task1 = createClient("CL1", points1List, beanImplementation);
-			
-			points1List = createPointsWithPrefix("B");
-			Runnable task2 = createClient("CL2", points1List, beanImplementation);
+			DashboardClient client = new DashboardClient("A", beanImplementation, nrCallsForClient);
+			Runnable task1 = new MyThread(client);
+			DashboardClient client2 = new DashboardClient("B", beanImplementation, nrCallsForClient);
+			Runnable task2 = new MyThread(client2);
 
 			long start = System.currentTimeMillis();
 			executor.execute(task1);
@@ -57,16 +56,18 @@ public class Main {
 			log.info("Completed in " + (end - start) + " ms, "+((end - start)/1000)+" secs");
 
 			//3. Call EJB to get data from DB
-			SegmentClient clientCheck = new SegmentClient("clientCheck", beanImplementation);
-			checkData(clientCheck.getAllSegments(), clientCheck.getAllPoints());
+			DashboardClient clientCheck = new DashboardClient("clientCheck", beanImplementation, nrCallsForClient);
+			checkData(clientCheck.getAllSegments(), clientCheck.getAllPoints(), nrClients, nrCallsForClient);
 		} catch (Exception e) {
 			log.error("Exception in main: ", e);
 		}
 	}
 
 	//Check 1.if same point do not appear in two segments, 2. if any point got lost.
-	private static void checkData(List<SegmentDTO> listSegments, List<String> points) {
-		List<String> listPoints = getAllPointsFromSegments(listSegments); // A0, A1, A2, A3
+	static void checkData(List<SegmentDTO> segments, List<String> points, int nrClients, int nrCallsForClient) {
+		log.info("nrClients: " + nrClients + ", nrCallsForClient: "+nrCallsForClient+", nr segments created: "+segments.size()+", nr single points: "+points.size());
+		
+		List<String> listPoints = getAllPointsFromSegments(segments); // A0, A1, A2, A3
 		Set<String> set = new HashSet<String>(listPoints);
 		if (set.size() != listPoints.size()) {
 			log.error("DUPLICATED point found!!!");
@@ -74,8 +75,8 @@ public class Main {
 			log.info("Segments OK. No duplicates found.");
 		}
 		
-		if ((listPoints.size() - points.size()) != nrCallsForClient * 2) { // CoupledPoints - StillFreePoints != TotalCallsWeMadeToEjb
-			log.error("POINT missing!!! tot: " + (nrCallsForClient * 2 - (listPoints.size() - points.size())));
+		if ((listPoints.size() - points.size()) != nrCallsForClient * nrClients) { // CoupledPoints - StillFreePoints != TotalCallsWeMadeToEjb
+			log.error("POINT missing!!! tot: " + (nrCallsForClient * nrClients - (listPoints.size() - points.size())));
 		} else {
 			log.info("Points OK. All point are coupled.");
 		}
@@ -93,18 +94,12 @@ public class Main {
 	}
 
 	//if prefix is "A", returns: "A0", "A1", "A2", "A3", "A4"...
-	private static List<String> createPointsWithPrefix(String prefix) {
+	static List<String> createPointsWithPrefix(String prefix, int nrCallsForClient) {
 		List<String> points1List = new ArrayList<>();
 		for (int i = 0; i < nrCallsForClient; i++) {
 			points1List.add(prefix + i);
 		}
 		return points1List;
-	}
-
-	private static Runnable createClient(String clientName, List<String> points1List, String beanImplementation) {
-		SegmentClient client = new SegmentClient(clientName, beanImplementation);
-		Runnable task = new MyThread(client, points1List, SLEEP_TIME);
-		return task;
 	}
 	
 	private static void getValuesFromInput(String[] args) {
@@ -157,29 +152,19 @@ public class Main {
 }
 
 class MyThread implements Runnable {
-
 	private static final Logger log = Logger.getLogger(MyThread.class);
-	private long timeSleep;
-	private SegmentClient client;
-	private List<String> pointList;
+	private DashboardClient client;
 
-	public MyThread(final SegmentClient client, List<String> points, long newtimeSleep) {
+	public MyThread(DashboardClient client) {
 		this.client = client;
-		this.pointList = points;
-		this.timeSleep = newtimeSleep;
 	}
 
 	@Override
 	public void run() {
 		try {
-			for (String point : pointList) {
-				client.addPointToDashboard(point);
-				Thread.sleep(timeSleep);
-			}
-		} catch (InterruptedException e) {
-			log.error("InterruptedException in Client " + (client != null ? client.getName() : "null"), e);
+			client.send();
 		} catch (Exception e) {
-			log.error("General Exception in Client " + (client != null ? client.getName() : "null"), e);
+			log.error("General Exception in Thread of Client " + client, e);
 		}
 	}
 

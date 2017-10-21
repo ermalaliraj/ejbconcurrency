@@ -8,7 +8,7 @@ import com.ea.ejbconcurrency.dto.SegmentDTO;
 import com.ea.ejbconcurrency.exception.ServerException;
 
 @Remote
-public interface SegmentRemote {
+public interface DashboardRemote {
 	
 	public SegmentDTO addPointToDashboard(String name) throws ServerException;
 	public List<SegmentDTO> getAllSegments() throws ServerException;

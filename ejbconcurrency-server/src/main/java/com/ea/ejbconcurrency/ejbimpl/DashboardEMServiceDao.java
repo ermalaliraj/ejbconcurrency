@@ -16,14 +16,14 @@ import com.ea.ejbconcurrency.entity.SegmentEntity;
 import com.ea.ejbconcurrency.entity.PointEntity;
 import com.ea.ejbconcurrency.exception.BusinessException;
 import com.ea.ejbconcurrency.exception.ServerException;
-import com.ea.ejbconcurrency.remote.SegmentRemote;
+import com.ea.ejbconcurrency.remote.DashboardRemote;
 import com.ea.ejbconcurrency.service.SegmentService;
 
 @Stateless
-@Remote(SegmentRemote.class)
-public class SegmentEMServiceDao implements SegmentRemote {
+@Remote(DashboardRemote.class)
+public class DashboardEMServiceDao implements DashboardRemote {
 
-	private static final Log log = LogFactory.getLog(SegmentEMServiceDao.class);
+	private static final Log log = LogFactory.getLog(DashboardEMServiceDao.class);
 
 	@EJB(name = "segmentService")
 	protected SegmentService segmentService;

@@ -18,13 +18,13 @@ import com.ea.ejbconcurrency.entity.SegmentEntity;
 import com.ea.ejbconcurrency.entity.PointEntity;
 import com.ea.ejbconcurrency.exception.BusinessException;
 import com.ea.ejbconcurrency.exception.ServerException;
-import com.ea.ejbconcurrency.remote.SegmentRemote;
+import com.ea.ejbconcurrency.remote.DashboardRemote;
 
 @Stateless
-@Remote(SegmentRemote.class)
-public class SegmentEM implements SegmentRemote {
+@Remote(DashboardRemote.class)
+public class DashboardEM implements DashboardRemote {
 
-	private static final Log log = LogFactory.getLog(SegmentEM.class);
+	private static final Log log = LogFactory.getLog(DashboardEM.class);
 
 	@PersistenceContext(unitName = "exampleEM")
 	protected EntityManager entityManager;
@@ -44,7 +44,7 @@ public class SegmentEM implements SegmentRemote {
 			log.info("Inserting point '" + name + "'. If present any free (uncoupled) point, a new segment between two will be created. ");
 			String freePoint = getFirstFreePoint();
 			if (freePoint != null) {
-				Thread.sleep(1000*2);
+				Thread.sleep(1000*1);
 				SegmentEntity newSegment = insertSegment(freePoint, name);
 				segment = new SegmentDTO(newSegment.getPoint1(), newSegment.getPoint2());
 				removePoint(freePoint);
@@ -158,9 +158,9 @@ public class SegmentEM implements SegmentRemote {
 	}
 
 	private void removeAllPoints() {
-		for (String e : getAllPoints()) {
-			removePoint(e);
-		}
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from PointEntity ");
+		entityManager.createQuery(sql.toString()).executeUpdate();		
 	}
 	
 	private SegmentEntity insertSegment(String point1, String point2) {
@@ -170,16 +170,10 @@ public class SegmentEM implements SegmentRemote {
 		return entity;
 	}
 
-	private void removeSegment(Integer segmentId) {
-		SegmentEntity e = entityManager.getReference(SegmentEntity.class, segmentId);
-		entityManager.remove(e);
-		log.debug("removeSegment: " + e);
-	}
-
 	private void removeAllSegments() {
-		for (SegmentDTO e : getAllSegments()) {
-			removeSegment(e.getId());
-		}
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from SegmentEntity ");
+		entityManager.createQuery(sql.toString()).executeUpdate();
 	}
 	
 }
