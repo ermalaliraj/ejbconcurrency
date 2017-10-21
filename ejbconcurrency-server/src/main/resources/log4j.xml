@@ -17,11 +17,13 @@
         </layout>
     </appender>
     
-        
+    <logger name="log4j.logger.org.jboss.ejb.client">
+        <level value="WARN"/>
+    </logger>
+    
     <logger name="com.ea">
         <level value="debug"/>
     </logger>
-    
     
     <root>
         <level value="WARN"/>

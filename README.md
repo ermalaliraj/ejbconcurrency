@@ -157,7 +157,7 @@ Missing points: []
 * [JSR-318 EJB 3.1 Spec] - Enterprise JavaBean 3.1 Specification (Cap13. Support for Transactions, 13.3.2 Isolation Levels)
 * [Adam Bien's weblog] - Is EntityManager Thread Safe?
 * [Concurrency in a Singleton] - 34.2.1.2 Managing Concurrent Access in a Singleton Session Bean
-* [Isolation Levels] - Matrix of isolation levels to avoid _Dirty read_, _Nonrepeatable read_ and _Phantom read_
+* [Isolation Levels] - Example of isolation levels and how to avoid _Dirty read_, _Nonrepeatable read_ and _Phantom read_
 * [Reentrant Lock] - Simple explanation of reentrant locks in Java.
 * [OptimisticLockException] - Example when OptimisticLockException is thrown.
 * [@Stateless or @Singleton instead of static helper class?]: Stackoverflow post. Reason of this test project.
@@ -175,7 +175,7 @@ Missing points: []
    [Is EntityManager really thread-safe?]: <https://stackoverflow.com/questions/24643863/is-entitymanager-really-thread-safe>
    [@Stateless or @Singleton instead of static helper class?]: <https://stackoverflow.com/questions/46655330/stateless-or-singleton-instead-of-static-helper-class/46664872#46664872>
    [OptimisticLockException]: <https://www.mkyong.com/jpa/jpa-optimistic-lock-exception-in-java-development/>
-   [Isolation Levels]: <http://www.oracle.com/technetwork/testcontent/o65asktom-082389.html>
+   [Isolation Levels]: <http://javadata.blogspot.be/2011/05/dirty-readphantom-read-and-non.html>
   
    [MD Editor]: <https://dillinger.io/>
    
