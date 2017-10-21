@@ -78,7 +78,7 @@ It creates two Threads, one for client _CLI1_ and one for _CLE2_, which send "_i
 CL1: A1, A2, A3, A4, A5, A6, A7, A8, A9, A10
 CL2: B1, B2, B3, B4, B5, B6, B7, B8, B9, B10
 ```
-Use interface `CommandRemote.java` for calling the EJB, specifying one of the following implementations.
+Use interface `DashboardRemote.java` for calling the EJB, specifying one of the following implementations.
 
 | Different approaches | EJB Implementation |
 | ------ | ------ |

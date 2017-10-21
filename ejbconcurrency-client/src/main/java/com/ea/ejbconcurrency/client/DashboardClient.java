@@ -28,7 +28,6 @@ public class DashboardClient {
 	}
 
 	private DashboardRemote getRemote() {
-		DashboardRemote remote = null;
 		try {
 			Properties properties = new Properties();
 			// deactivate authentication, not enough only .properties values
@@ -60,7 +59,7 @@ public class DashboardClient {
 		DashboardClient client = new DashboardClient("A", Main.IMPLEMENTATION_EM, nrCallsForClient);
 		client.resetDashboard();
 		client.send();
-		Main.checkData(client.getAllSegments(), client.getAllPoints(), 1, nrCallsForClient);
+	    Main.checkData(client.getAllSegments(), client.getAllPoints(), 1, nrCallsForClient);
 	}
 
 	public void send() {

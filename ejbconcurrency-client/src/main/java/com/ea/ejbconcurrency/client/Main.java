@@ -17,10 +17,10 @@ public class Main {
 	private static final Logger log = Logger.getLogger(Main.class);
 	private static final int DEFAULT_NR_CLIENTS = 2;
 	private static final int DEFAULT_NR_CALLS_FOR_CLIENT = 10;
-	public static final String IMPLEMENTATION_EM = "SegmentEM";
-	public static final String IMPLEMENTATION_DS = "SegmentDS";
-	public static final String IMPLEMENTATION_SINGLETON = "SegmentDSIsolationLevel";
-	public static final String IMPLEMENTATION_SERVICE_DAO = "SegmentEMSafe";
+	public static final String IMPLEMENTATION_EM = "DashboardEM";
+	public static final String IMPLEMENTATION_DS = "DashboardDS";
+	public static final String IMPLEMENTATION_SINGLETON = "DashboardDSUseSingleton";
+	public static final String IMPLEMENTATION_SERVICE_DAO = "DashboardEMSafe";
 	
 	public static String beanImplementation = IMPLEMENTATION_EM;
 	public static int nrClients = DEFAULT_NR_CLIENTS;
@@ -92,15 +92,6 @@ public class Main {
 		}
 		return res;
 	}
-
-	//if prefix is "A", returns: "A0", "A1", "A2", "A3", "A4"...
-	static List<String> createPointsWithPrefix(String prefix, int nrCallsForClient) {
-		List<String> points1List = new ArrayList<>();
-		for (int i = 0; i < nrCallsForClient; i++) {
-			points1List.add(prefix + i);
-		}
-		return points1List;
-	}
 	
 	private static void getValuesFromInput(String[] args) {
 		int implInput = 0;
@@ -133,19 +124,19 @@ public class Main {
 	
 	private static void mostraHelp() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Run the client SegmentClient using: java -jar segmentclient.jar implNr nrCallsForEachClient\n ");
+		sb.append("Run the client DashboardClient using: java -jar dashboardclient.jar implNr nrCallsForEachClient\n ");
 		sb.append("- implNr must be an integer:");
 		sb.append("\n");
-		sb.append("\t1 - for SegmentEM impl which use @PersistenceContext EntityManager");
+		sb.append("\t1 - for DashboardEM impl which use @PersistenceContext EntityManager");
 		sb.append("\n");
-		sb.append("\t2 - for SegmentDS impl which use @Datasource");
+		sb.append("\t2 - for DashboardDS impl which use @Datasource");
 		sb.append("\n");
-		sb.append("\t3 - for SegmentDSIsolationLevel impl which use @Singleton");
+		sb.append("\t3 - for DashboardDSSingleton impl which use @Singleton");
 		sb.append("\n");
-		sb.append("\t4 - for SegmentEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
+		sb.append("\t4 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
 		sb.append("\n");
 		sb.append("- nrCallsForEachClient should be an integer. How many points each client will send to the EJB");
-		sb.append("Example of correct call: using: java -jar segmentclient.jar 1 10\n");
+		sb.append("Example of correct call: using: java -jar dashboardclient.jar 1 10\n");
 		System.out.println(sb.toString());
 	}
 

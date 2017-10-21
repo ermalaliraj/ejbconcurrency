@@ -42,7 +42,7 @@
 	</dependencies>
 	
 	<build>
-	 	<finalName>segmentclient</finalName>
+	 	<finalName>dashboardclient</finalName>
 	 	
 		<plugins>
 			<plugin>
