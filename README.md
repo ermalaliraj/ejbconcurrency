@@ -83,7 +83,7 @@ Use interface `DashboardRemote.java` for calling the EJB, specifying one of the 
 | Different approaches | EJB Implementation |
 | ------ | ------ |
 | @PersistenceContext EntityManager| DashboardEM.java |
-| @Datasource | SegmentDS.java |
+| @Datasource | DashboardDS.java |
 | Datasource inside @Singleton | DashboardDSUseSingleton.java |
 | EntityManager in ejb-service-dao approach| DashboardEMSafe.java |
 
