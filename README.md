@@ -64,7 +64,7 @@ We want to avoid this scenario:
 3. _CL1_ executes _step2_   <= _[A0-A1]_ will be inserted in DB. OK
 4. _CL2_ executes _step2_   <= _[A0-B1]_ will be inserted in DB. **NOTOK**, _A0_ is not anymore free.
 
-Lets see how the container will handle this situation in different scenarios.
+Lets see how the container will handle this situation in different scenarios.  See also [Isolation Levels]
 
 ## Test configuration
 
