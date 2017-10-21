@@ -1,5 +1,5 @@
 # ejbconcurrency
-_ejbconcurrency_ is a small project for checking how container handles EJB transasctions in `@Stateless` and `@Singleton` session beans. Both cases are used `@EntityManager` and  `@Datasource` for database interactions.
+_ejbconcurrency_ is a small project for checking how container handles EJB transactions in `@Stateless` and `@Singleton` session beans. We see the difference between using `@EntityManager` and  `@Datasource` for database interactions.
 
 # Project structure
 The project consists in three modules:
@@ -9,23 +9,26 @@ The project consists in three modules:
 
 # EJB - Description
 _Segment_ is a _stateless_ EJB which adds a *point* in the dashboard. If any other free point present, adds a new *segment* between two points. The same point can not be used in two segments.
+
+![Segments](./segments2.jpg)
+
 # EJB - Technical
 `@Stateless
-SegmentRemote.addStationToDashboard("A1")`  => Adds the segment _[A0-A1]_, with the first free point _A0_ found.
+SegmentRemote.addPointToDashboard("A1")`  => Adds the segment _[A0-A1]_, with the first free point _A0_ found.
 Given a new incoming point *A1*:
-- There is any free point *A0* in database? =>  `select from STATION where rownum=1;`
+- There is any free point *A0* in database? =>  `select * from POINT where rownum=1;`
     - YES
-        1. Creates the segment *A0-A1*  => `insert into table LINE(A0, A1)`
-        2. Remove *A0* from the temporary table => `delete from STATION where name = 'A0'`
+        1. Creates the segment *A0-A1*  => `insert into table SEGMENT(A0, A1)`
+        2. Remove *A0* from the temporary table => `delete from POINT where name = 'A0'`
     - NO
-        1. Add *A1* to the temporary table => `insert into table STATION values(A1)`
-        2. A1 will be coupled with the next eventually coming point, *A2*.
+        1. Add *A1* to the temporary table => `insert into table POINT values(A1)`
+        2. *A1* will be coupled with the next eventually coming point, *A2*.
 		
-If a client calls `SegmentRemote` and sends a sequence of points, one by one: `A1, A2, A3, A4, A5`
+If a client calls `SegmentRemote` and sends a sequence of points, one by one: `A0, A1, A2, A3, A4, A5, A6`. <br/> 
 At the end of the computation the data in DB will be as follow:
 ```
-Segments: [A1-A2], [A3-A4]
-Stations: [A5] 
+Segments: [A0-A1], [A2-A3], [A4-A5]
+Points:   [A6] 
 ```
 
 ## Concurrent scenario
@@ -44,15 +47,15 @@ To each client the container will assign a different instance of the `STLB` from
 
 
 ## Problem
-Consider *A0* is present in `STATION` and two new requests are coming, point *A1* from *CLIENT1* and point *B1* from *CLIENT2*.
+Consider *A0* is present in `POINT db table` and two new requests are coming, point *A1* from *CLIENT1* and point *B1* from *CLIENT2*.
 _Steps_ to be done for completing the task on each **SLSB** instance are the following:
-1. `select from STATION where rownum=1`
-2. `insert into table LINE(A0, A1)`
-3. `delete from STATION where name = 'A0'`
+1. `select * from POINT where rownum=1`
+2. `insert into table SEGMENT(A0, A1)`
+3. `delete from POINT where name = 'A0'`
 
 We want:
 - Three steps to be in a single transaction, so failure of a single instruction/step will rollback all steps.
-- Same point can not be present in two different _segments_.
+- Same _point_ can not be present in two different _segments_.
 - We don't want any _point_ to remain uncoupled if another one is free.
 
 We want to avoid this scenario: 
@@ -81,10 +84,8 @@ Use interface `CommandRemote.java` for calling the EJB, specifying one of the fo
 | ------ | ------ |
 | @PersistenceContext EntityManager| SegmentEM.java |
 | @Datasource | SegmentDS.java |
-| Datasource inside SL Singleton | SegmentDSIsolationLevel.java |
+| Datasource inside @Singleton | SegmentDSIsolationLevel.java |
 | EntityManager in ejb-service-dao approach| SegmentEMSafe.java |
-
-Each implementation uses different approaches for DB interactions: `@PersistenceContext`, `@Datasource` and `@Singleton`.
 
 ### Test 1 - Using EntityManager 
 `@PersistenceContext
@@ -92,11 +93,11 @@ EntityManager entityManager`
 
 **RESULT**
 ```
-LINES with no re-send: [A0-B1], [B0-B2], [B3-B4], [B5-A4], [A5-B7], [B8-A7], [A8-A9]
-LINES with re-send:    [A0-B1], [B0-B2], [B3-B4], [B5-B6], [B7-B8], [B9-A1], [A2-A3], [A4-A5], [A6-A7], [A8-A9]
-Stations:[]   
-Missing points with no re-sending: A1, A2, A3, A6, B6, B9
-Missing points with re-sending: 0
+SEGMENTS with no re-send: [A0-B1], [B0-B2], [B3-B4], [B5-A4], [A5-B7], [B8-A7], [A8-A9]
+SEGMENTS with re-send:    [A0-B1], [B0-B2], [B3-B4], [B5-B6], [B7-B8], [B9-A1], [A2-A3], [A4-A5], [A6-A7], [A8-A9]
+Points:[]   
+Missing points with no re-send: A1, A2, A3, A6, B6, B9
+Missing points with re-send: 0
 ```
 
 **OBSERVATION**
@@ -106,7 +107,7 @@ Missing points with re-sending: 0
 `...`<br/>-
 `Caused by: javax.persistence.OptimisticLockException: org.hibernate.StaleStateException: Batch update returned unexpected row count from update [0]; actual row count: 0; expected: 1`<br/>-
 `Caused by: org.hibernate.StaleStateException: Batch update returned unexpected row count from update [0]; actual row count: 0; expected: 1`
-- For `consuming` all the points (even the one which failed) in the client we added a re-sending mechanism like: <br/>`while (!success && count < 10) {remote.addStationToDashboard("name");}`. If the bean is a `MDB`there is no need for this mechanism, as MBD (Messaging broker actually) comes with a built-in resending policy, and on `EJBTransactionRolledbackException` the container will resend the message again.
+- For `consuming` all the points (even the one which failed) in the client we added a re-sending mechanism like: <br/>`while (!success && count < 10) {remote.addPointToDashboard("name");}`. If the bean is a `MDB`there is no need for this mechanism, as MBD (Messaging broker actually) comes with a built-in resending policy, and on `EJBTransactionRolledbackException` the container will resend the message again.
 
 ## Test2 - Using Datasource
 `@Resource(mappedName = "java:jboss/datasources/ExampleDS")
@@ -114,8 +115,8 @@ private DataSource dataSource;`
 
 **RESULT**
 ```
-LINES:[A0-A1], [A0-B1], [B0-A2], [B0-B2], [B3-A4], [B3-B4], [A3-A5], [A3-B5], [A6-B6], [A7-B7], [A8-B8], [A9-B9]
-Stations: []
+SEGMENTS:[A0-A1], [A0-B1], [B0-A2], [B0-B2], [B3-A4], [B3-B4], [A3-A5], [A3-B5], [A6-B6], [A7-B7], [A8-B8], [A9-B9]
+Points: []
 ```
 
 **OBSERVATION**
@@ -129,28 +130,27 @@ Using singleton with `WRITE` lock we make the isolation level to `SERIALIZE`.
 
 **RESULT**
 ```
-LINES:  [A0-B0], [A1-A2], [B1-A3], [B2-A4], [B3-A5], [B4-A6], [B5-A7], [B6-A8], [B7-A9], [B8-B9]
-Stations: []
+SEGMENTS:  [A0-B0], [A1-A2], [B1-A3], [B2-A4], [B3-A5], [B4-A6], [B5-A7], [B6-A8], [B7-A9], [B8-B9]
+Points: []
 Missing points: []
 ```
 
 **Observations**
-- Using the highest level of isolation in the method addStationToDashboard we make possible only one thread at a time can access `addStationToDashboard()`.
+- Using the highest level of isolation in the method addPointToDashboard we make possible only one thread at a time can access `addPointToDashboard()`.
 - Creates a bottle neck, all the threads (clients) have to wait after each other in order to execute the method. 
 - Lose the benefit of having different stateless instances in the pool.
 
 
 ## Conclusions
-- `SLSB` is _safe_ in sense that container warranties only one thread at time can execute a **single instance**. SPEC do not mention that the same method will be called only from 1 instance at time. (controversal answers around on this)
-- `EntityManager` is reliable. With the default isolation level is enough to avoid inconsistent data. 
+- `SLSB` is _safe_ in sense that container warranties only one thread at time can execute a **single instance**. SPEC do not mention that the same method will be called only from 1 instance at time. (controversal answers about this)
+- `EntityManager` is reliable. With the default isolation level is enough to avoid data inconsistent. 
 - Nice to see how to change isolation level and find an extreme case when needed. Even if from **SPEC 13.3.2** "_Isolation Levels Therefore, the EJB architecture does not define an API for managing isolation levels._"
 - A "copy" of `EnityManager` is injected to each `SLBS` instances by the container. Afterwards it is the `EntityManager` who is responsible for data consistency.
 
 
 # Environment
-- Application Server Jboss7
-- Datasource: Default present in standalone-full.xml 
-- DB: H2
+- Application Server: Jboss7.1.1 run with standalone-full.xml profile
+- Datasource: ExampleDS present in standalone-full.xml which connects to in memory H2 database. 
 
 
 # See
