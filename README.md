@@ -82,10 +82,10 @@ Use interface `DashboardRemote.java` for calling the EJB, specifying one of the 
 
 | Different approaches | EJB Implementation |
 | ------ | ------ |
-| @PersistenceContext EntityManager| SegmentEM.java |
+| @PersistenceContext EntityManager| DashboardEM.java |
 | @Datasource | SegmentDS.java |
-| Datasource inside @Singleton | SegmentDSIsolationLevel.java |
-| EntityManager in ejb-service-dao approach| SegmentEMSafe.java |
+| Datasource inside @Singleton | DashboardDSUseSingleton.java |
+| EntityManager in ejb-service-dao approach| DashboardEMSafe.java |
 
 ### Test 1 - Using EntityManager 
 `@PersistenceContext
