@@ -146,6 +146,11 @@ Missing points: []
 **Observations**
 - Using the highest level of isolation in the method addPointToDashboard we make possible only one thread at a time can access `addPointToDashboard()`.
 - Creates a bottle neck, all the threads (clients) have to wait after each other in order to execute the method. 
+- Execution time increases to 20 seconds, sending 10 _points_, versus 10 seconds in case of EntityManager. Try running: <br/> 
+`$ java -jar target/dashboardclient.jar 1 10`<br/>
+`$ java -jar target/dashboardclient.jar 3 10`<br/>
+
+ DashboardDSUseSingleton
 - Lose the benefit of having different stateless instances in the pool.
 
 
