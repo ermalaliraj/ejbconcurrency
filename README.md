@@ -160,7 +160,7 @@ Missing points: []
 In the _dist_ folder you can find already builded modules for running the test.
 - `ejbconcurrency-ear.ear`   - to be deployed on jboss
 - `dashboardclient.jar`      - to test the EJB from the command line
-Example, to call the EJB using the implementation with `@PersistenceContext` use the following command:
+Example, to call the EJB using the implementation with _EntityManager_ use the following command:
 ```
 $ java -jar dashboardclient.jar 1 10
 ```
