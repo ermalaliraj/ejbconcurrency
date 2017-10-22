@@ -153,8 +153,8 @@ Missing points: []
 
 
 # Environment
-- Application Server: Jboss7.1.1 run with standalone-full.xml profile. Default configuration from official download page.
-- Datasource: _ExampleDS_ present in standalone-full.xml which connects to in memory H2 database. 
+- Application Server: Jboss7.1.1 using _standalone-full.xml_ profile. No additional configuration download page version.
+- Datasource: _ExampleDS_ present in _standalone-full.xml_ which connects to in memory H2 database. 
 
 ## Deployment
 In the _dist_ folder you can find already builded modules for running the test.
