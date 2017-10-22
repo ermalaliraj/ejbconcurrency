@@ -152,18 +152,18 @@ Missing points: []
 - Lose the benefit of having different stateless instances in the pool.
 
 
-## Conclusions
+# Conclusions
 - `SLSB` is _safe_ in sense that container guarantees only one thread at time can execute a **single instance**. SPEC do not mention that the same method will be called only from 1 instance at time. (controversal answers about this)
 - `EntityManager` is reliable. With the default isolation level is enough to avoid data inconsistent. 
 - Nice to see how to change isolation level and find an extreme case when needed. Even if from **SPEC 13.3.2** "_Isolation Levels Therefore, the EJB architecture does not define an API for managing isolation levels._"
 - A "copy" of `EnityManager` is injected to each `SLBS` instances by the container. Afterwards it is the `EntityManager` who is responsible for data consistency.
 
 
-# Environment
+## Environment
 - Application Server: Jboss7.1.1 run with standalone-full.xml profile
 - Datasource: ExampleDS present in standalone-full.xml which connects to in memory H2 database. 
 
-# Deployment
+## Deployment
 In the _dist_ folder
 - dashboardclient.jar      # to test the EJB from the command line
 - ejbconcurrency-ear.ear   # to be deployed on jboss
