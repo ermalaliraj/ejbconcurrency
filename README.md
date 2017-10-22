@@ -131,7 +131,7 @@ Points: []
 `step2(conn)`<br/>
 `step3(conn)`<br/>
 `conn.commit();`
-- SOLUTION3: Use of Java mechanism to implement _SERIALIZABLE_ isolation level so only one thread at time can execute all transaction steps. Notice that to do so in a `SLSB` we need a synchronized block/method and a _static variable_ to be shared between all instances (to be used like a lock). This approach could be the worse one, since usage of _static variables_ and saving the state in `SLSB` is discouraged by _EJB spec_. Also, locking access never improves on access times. The cleanest way to do it, starting from EJB3.1 is using SL `@Singleton`. (see TEST3)
+- **SOLUTION3**: Use of Java mechanism to implement _SERIALIZABLE_ isolation level so only one thread at time can execute all transaction steps. Notice that to do so in a `SLSB` we need a synchronized block/method and a _static variable_ to be shared between all instances (to be used like a lock). This approach could be the worse one, since usage of _static variables_ and saving the state in `SLSB` is discouraged by _EJB spec_. Also, locking access never improves on access times. The cleanest way to do it, starting from EJB3.1 is using SL `@Singleton`. (see TEST3)
 
 ### TEST3 - Using @Singleton 
 Using singleton with `WRITE` lock we make the isolation level to `SERIALIZE`. 
