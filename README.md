@@ -48,7 +48,7 @@ To each client the container will assign a different instance of the `STLB` from
 
 ## Problem
 Consider *A0* is present in `POINT db table` and two new requests are coming, point *A1* from *CLIENT1* and point *B1* from *CLIENT2*.
-_Steps_ to be done for completing the task on each **SLSB** instance are the following:
+**Steps** to be done for completing the task on each **SLSB** instance are the following:
 1. `select * from POINT where rownum=1`
 2. `insert into table SEGMENT(A0, A1)`
 3. `delete from POINT where name = 'A0'`
@@ -123,16 +123,15 @@ Points: []
 - The result is not correct, **duplicated _points_!**
 - `@Datasource` does not offer any isolation level control, so threads/instances are accessing concurrently to the DB tables.
 - SOLUTION1: Use DB layer isolation level to avoid _Nonrepeatable_ and _Phantoms Reads_. `select for update` in oracle.
-- SOLUTION2: Control the isolation level of the connection. Same connection has to be used for all 3 steps in our case. <br/>
-`Connection connection = dataSource.getConnection();` <br/>
+- SOLUTION2: Control the isolation level of the _connection_. Same connection has to be used for all __3 steps__. <br/>
+`Connection conn = dataSource.getConnection();` <br/>
 `conn.setAutoCommit(false);`<br/>
 `conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);`<br/>
-`step1`<br/>
-`step1`<br/>
-`step1`<br/>
-`commit`
-
-- SOLUTION2: Use of Java mechanism to implement _SERIALIZABLE_ isolation level so only one thread at time can execute all transaction steps. Notice that to do so in a `SLSB` we need a synchronized block/method and a _static variable_ to be shared between all instances (to be used like a lock). This approach could be the worse one, since usage of _static variables_ and saving the state in `SLSB` is discouraged by _EJB spec_. Also, locking access never improves on access times. The cleanest way to do it, starting from EJB3.1 is using SL `@Singleton`. (see next test)
+`step1(conn)`<br/>
+`step2(conn)`<br/>
+`step3(conn)`<br/>
+`conn.commit();`
+- SOLUTION3: Use of Java mechanism to implement _SERIALIZABLE_ isolation level so only one thread at time can execute all transaction steps. Notice that to do so in a `SLSB` we need a synchronized block/method and a _static variable_ to be shared between all instances (to be used like a lock). This approach could be the worse one, since usage of _static variables_ and saving the state in `SLSB` is discouraged by _EJB spec_. Also, locking access never improves on access times. The cleanest way to do it, starting from EJB3.1 is using SL `@Singleton`. (see TEST3)
 
 ### TEST3 - Using @Singleton 
 Using singleton with `WRITE` lock we make the isolation level to `SERIALIZE`. 
