@@ -20,7 +20,7 @@ public class Main {
 	public static final String IMPLEMENTATION_EM = "DashboardEM";
 	public static final String IMPLEMENTATION_DS = "DashboardDS";
 	public static final String IMPLEMENTATION_SINGLETON = "DashboardDSUseSingleton";
-	public static final String IMPLEMENTATION_SERVICE_DAO = "DashboardEMSafe";
+	public static final String IMPLEMENTATION_SERVICE_DAO = "DashboardEMServiceDao";
 	
 	public static String beanImplementation = IMPLEMENTATION_EM;
 	public static int nrClients = DEFAULT_NR_CLIENTS;
@@ -131,7 +131,7 @@ public class Main {
 		sb.append("\n");
 		sb.append("\t2 - for DashboardDS impl which use @Datasource");
 		sb.append("\n");
-		sb.append("\t3 - for DashboardDSSingleton impl which use @Singleton");
+		sb.append("\t3 - for DashboardDSUseSingleton impl which use @Singleton");
 		sb.append("\n");
 		sb.append("\t4 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
 		sb.append("\n");
