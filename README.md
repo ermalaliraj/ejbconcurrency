@@ -180,7 +180,7 @@ $ java -jar dashboardclient.jar 1 10
 * [Isolation Levels] - Real example of _Dirty Read_, _Phantom Read_ and _Non Repeatable Read_
 * [Reentrant Lock] - Simple explanation of reentrant locks in Java.
 * [OptimisticLockException] - Example when OptimisticLockException is thrown.
-* [@Stateless or @Singleton instead of static helper class?]: Stackoverflow post. Reason of this test project.
+* [@Stateless or @Singleton instead of static helper class?]: Stackoverflow post. Why this project.
 * [Why Stateless session beans?] - Stackoverflow post. See _BalusC_ and _user698226_ answers.
 * [Is EntityManager really thread-safe?]: - Stackoverflow post. See the accepted answer.
 
