@@ -165,40 +165,44 @@ Example, to call the EJB using the implementation with _EntityManager_ and send 
 ```
 $ java -jar dashboardclient.jar 1 10
 
-INFO [com.ea.ejbconcurrency.client.Main] .main(32) | Calling EJB Segment with implementation "DashboardEM". Created 2 clients, each of them will send to the EJB 10 points
-INFO [com.ea.ejbconcurrency.client.Main] .main(33) | We expect at the end of the test: 10 Segments and 0 Points
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .resetDashboard(111) | CLIENT-CLEANER: Dashboard cleaned
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A0
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B0
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B1
-ERROR [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B2
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B3
-ERROR [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B4
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B5
-ERROR [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B6
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B7
-ERROR [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B8
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B9
-ERROR [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A1
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A2
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A3
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A4
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A5
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A6
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A7
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A8
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A9
-INFO [com.ea.ejbconcurrency.client.Main] .main(56) | Completed in 10780 ms, 10 secs
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .getAllSegments(90) | CLIENT-clientCheck - Segments: [[A0-B1], [B0-B2], [B3-B4], [B5-B6], [B7-B8], [B9-A1], [A2-A3], [A4-A5], [A6-A7], [A8-A9]]
-INFO [com.ea.ejbconcurrency.client.DashboardClient] .getAllPoints(101) | CLIENT-clientCheck - points: []
-INFO [com.ea.ejbconcurrency.client.Main] .checkData(68) | nrClients: 2, nrCallsForClient: 10, nr segments created: 10, nr single points: 0
-INFO [com.ea.ejbconcurrency.client.Main] .checkData(75) | Segments OK. No duplicates found.
-INFO [com.ea.ejbconcurrency.client.Main] .checkData(81) | Points OK. All point are coupled.
+INFO [Main] .main(32) | Calling EJB Segment with implementation "DashboardEM". Created 2 clients, each of them will send to the EJB 10 points
+INFO [Main] .main(33) | We expect at the end of the test: 10 Segments and 0 Points
+INFO [DashboardClient] .resetDashboard(111) | CLIENT-CLEANER: Dashboard cleaned
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A0
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B0
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A1
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point B1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A2
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A3
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point B1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A4
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A5
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point B1): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B1
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B2
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A6): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B3
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B4
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A6): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A6
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A7
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point B5): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B5
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B6
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A8): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B7
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B8
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A8): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-B - Added point: B9
+ERROR[DashboardClient] .addPointToDashboard(80) | General Exception (retry for point A8): Transaction rolled back - Cause: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A8
+INFO [DashboardClient] .addPointToDashboard(77) | CLIENT-A - Added point: A9
+INFO [Main] .main(56) | Completed in 10946 ms, 10 secs
+INFO [DashboardClient] .getAllSegments(90) | CLIENT-clientCheck - Segments: [[A0-A1], [B0-A2], [A3-A4], [A5-B1], [B2-B3], [B4-A6], [A7-B5], [B6-B7], [B8-B9], [A8-A9]]
+INFO [DashboardClient] .getAllPoints(101) | CLIENT-clientCheck - points: []
+INFO [Main] .checkData(68) | nrClients: 2, nrCallsForClient: 10, nr segments created: 10, nr single points: 0
+INFO [Main] .checkData(75) | Segments OK. No duplicates found.
+INFO [Main] .checkData(81) | Points OK. All point are coupled.
 ```
 
 # Conclusions
