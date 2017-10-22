@@ -154,13 +154,13 @@ Missing points: []
 
 # Environment
 - Application Server: Jboss7.1.1 using _standalone-full.xml_ profile. No additional configuration download page version.
-- Datasource: _ExampleDS_ present in _standalone-full.xml_ which connects to in memory H2 database. 
+- Datasource: _ExampleDS_ present in _standalone-full.xml_ which connects to in memory _H2_ database. 
 
 ## Deployment
 In the _dist_ folder you can find already builded modules for running the test.
-- ejbconcurrency-ear.ear   # to be deployed on jboss
-- dashboardclient.jar      # to test the EJB from the command line
-Example, to call the EJB using the implementation with @PersistenceContext use the following command:
+- ejbconcurrency-ear.ear   - to be deployed on jboss
+- dashboardclient.jar      - to test the EJB from the command line
+Example, to call the EJB using the implementation with `@PersistenceContext` use the following command:
 ```
 $ java -jar dashboardclient.jar 1 10
 ```
