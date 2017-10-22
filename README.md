@@ -10,7 +10,7 @@ The project consists in three modules:
 # EJB - Description
 _Dashboard_ is a _stateless_ EJB which adds a *point* in the dashboard. If any other free point present, adds a new *segment* between two points. The same point can not be used in two segments.
 
-![Segments](./segments.jpg)
+![Segments](./doc/segments.jpg)
 
 # EJB - Technical
 `@Stateless
