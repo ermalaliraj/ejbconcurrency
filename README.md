@@ -209,7 +209,7 @@ INFO [Main] .checkData(81) | Points OK. All point are coupled.
 - `SLSB` is _safe_ in sense that container guarantees only one thread at time can execute a **single instance**. SPEC do not mention that the same method will be called only from 1 instance at time. (controversal answers about this)
 - `EntityManager` is reliable. With the default isolation level is enough to avoid data inconsistent. 
 - Nice to see how to change isolation level and find an extreme case when needed. Even if from **SPEC 13.3.2** "_Isolation Levels Therefore, the EJB architecture does not define an API for managing isolation levels._"
-- A "copy" of `EnityManager` is injected to each `SLBS` instances by the container. Afterwards it is the `EntityManager` who is responsible for data consistency.
+- A "copy" of `EnityManager` is injected to each `SLBS` instances by the container. Afterwards it is the `EntityManager` responsible for data consistency.
 
 
 # See
