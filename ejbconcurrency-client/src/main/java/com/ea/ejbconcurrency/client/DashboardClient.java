@@ -77,7 +77,7 @@ public class DashboardClient {
 				log.info("CLIENT-" + name + " - Added point: " + pointName);
 				success = true;
 			} catch (Exception e) { // EJBTransactionRolledbackException
-				log.error("General Exception (retry for point " + pointName + "): " + e.getMessage() + " - Cause: " + e.getCause());
+				log.error("Retry point " + pointName + ": " + e.getMessage() + " - Cause: " + e.getCause());
 				count++;
 			}
 		}

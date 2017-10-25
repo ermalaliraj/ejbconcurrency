@@ -8,6 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+
 import org.apache.log4j.Logger;
 
 import com.ea.ejbconcurrency.dto.SegmentDTO;
@@ -19,6 +22,7 @@ public class Main {
 	private static final int DEFAULT_NR_CALLS_FOR_CLIENT = 10;
 	public static final String IMPLEMENTATION_EM = "DashboardEM";
 	public static final String IMPLEMENTATION_DS = "DashboardDS";
+	public static final String IMPLEMENTATION_DS_TX_BEAN= "DashboardDSTxBean";
 	public static final String IMPLEMENTATION_SINGLETON = "DashboardDSUseSingleton";
 	public static final String IMPLEMENTATION_SERVICE_DAO = "DashboardEMServiceDao";
 	
@@ -106,11 +110,15 @@ public class Main {
 				beanImplementation = IMPLEMENTATION_DS;
 				break;
 			case 3:
-				beanImplementation = IMPLEMENTATION_SINGLETON;
+				beanImplementation = IMPLEMENTATION_DS_TX_BEAN;
 				break;
 			case 4:
-				beanImplementation = IMPLEMENTATION_SERVICE_DAO;
+				beanImplementation = IMPLEMENTATION_SINGLETON;
 				break;
+			case 5:
+				beanImplementation = IMPLEMENTATION_SERVICE_DAO;
+				break;	
+				
 
 			default:
 				beanImplementation = IMPLEMENTATION_EM;
@@ -131,9 +139,11 @@ public class Main {
 		sb.append("\n");
 		sb.append("\t2 - for DashboardDS impl which use @Datasource");
 		sb.append("\n");
-		sb.append("\t3 - for DashboardDSUseSingleton impl which use @Singleton");
+		sb.append("\t3 - for DashboardDSTxBean impl which use @Datasource in @TransactionManagement(BEAN) and conn.autocommit(false)");
 		sb.append("\n");
-		sb.append("\t4 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
+		sb.append("\t4 - for DashboardDSUseSingleton impl which use @Singleton");
+		sb.append("\n");
+		sb.append("\t5 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
 		sb.append("\n");
 		sb.append("- nrCallsForEachClient should be an integer. How many points each client will send to the EJB");
 		sb.append("Example of correct call: using: java -jar dashboardclient.jar 1 10\n");
