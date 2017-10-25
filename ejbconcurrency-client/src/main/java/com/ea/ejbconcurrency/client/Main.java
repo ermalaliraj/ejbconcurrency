@@ -22,7 +22,8 @@ public class Main {
 	private static final int DEFAULT_NR_CALLS_FOR_CLIENT = 10;
 	public static final String IMPLEMENTATION_EM = "DashboardEM";
 	public static final String IMPLEMENTATION_DS = "DashboardDS";
-	public static final String IMPLEMENTATION_DS_TX_BEAN= "DashboardDSTxBean";
+	public static final String IMPLEMENTATION_DS_TX_BEAN = "DashboardDSTxBean";
+	public static final String IMPLEMENTATION_DS_SELECT_UPDATE = "DashboardDSSelectForUpdate";
 	public static final String IMPLEMENTATION_SINGLETON = "DashboardDSUseSingleton";
 	public static final String IMPLEMENTATION_SERVICE_DAO = "DashboardEMServiceDao";
 	
@@ -113,9 +114,12 @@ public class Main {
 				beanImplementation = IMPLEMENTATION_DS_TX_BEAN;
 				break;
 			case 4:
-				beanImplementation = IMPLEMENTATION_SINGLETON;
+				beanImplementation = IMPLEMENTATION_DS_SELECT_UPDATE;
 				break;
 			case 5:
+				beanImplementation = IMPLEMENTATION_SINGLETON;
+				break;
+			case 6:
 				beanImplementation = IMPLEMENTATION_SERVICE_DAO;
 				break;	
 				
@@ -141,9 +145,11 @@ public class Main {
 		sb.append("\n");
 		sb.append("\t3 - for DashboardDSTxBean impl which use @Datasource in @TransactionManagement(BEAN) and conn.autocommit(false)");
 		sb.append("\n");
-		sb.append("\t4 - for DashboardDSUseSingleton impl which use @Singleton");
+		sb.append("\t4 - for DashboardDSSelectForUpdate impl which use SELECT FOR UPDATE");
 		sb.append("\n");
-		sb.append("\t5 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
+		sb.append("\t5 - for DashboardDSUseSingleton impl which use @Singleton");
+		sb.append("\n");
+		sb.append("\t6 - for DashboardEMServiceDao impl which use Service-Dao approach and @PersistenceContext is located in the DAO layer");
 		sb.append("\n");
 		sb.append("- nrCallsForEachClient should be an integer. How many points each client will send to the EJB");
 		sb.append("Example of correct call: using: java -jar dashboardclient.jar 1 10\n");
