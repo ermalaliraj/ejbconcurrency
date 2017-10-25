@@ -8,9 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-
 import org.apache.log4j.Logger;
 
 import com.ea.ejbconcurrency.dto.SegmentDTO;
@@ -145,7 +142,7 @@ public class Main {
 		sb.append("\n");
 		sb.append("\t3 - for DashboardDSTxBean impl which use @Datasource in @TransactionManagement(BEAN) and conn.autocommit(false)");
 		sb.append("\n");
-		sb.append("\t4 - for DashboardDSSelectForUpdate impl which use SELECT FOR UPDATE");
+		sb.append("\t4 - for DashboardDSSelectForUpdate impl which use @Datasource and SELECT FOR UPDATE");
 		sb.append("\n");
 		sb.append("\t5 - for DashboardDSUseSingleton impl which use @Singleton");
 		sb.append("\n");
